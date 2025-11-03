@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------
+// Auth.js Adapter Models (Standard Naming Required)
+// -------------------------------------------------------------
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+
+  provider           String
+  providerAccountId  String
+
+  type               String
+  access_token       String?   // ✅ snake_case
+  refresh_token      String?   // ✅ snake_case
+  expires_at         Int?      // ✅ number, NOT DateTime
+  token_type         String?   // ✅ snake_case
+  scope              String?   // ✅ snake_case
+  id_token           String?   // ✅ snake_case
+  session_state      String?   // ✅ snake_case
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+
+model Session {
+  id           String   @id @default(cuid())
+  // CRITICAL: Session Token is required to be unique
+  sessionToken String   @unique 
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Standard fields
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  
+  // CRITICAL: Compound unique index for the adapter
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+ 
+  accounts      Account[]
+  sessions      Session[]
+  jobs          Job[]     @relation("postedJobs")
+  application   Application[]
+  profile Profile?
+  
+  
+}
+
+// -------------------------------------------------------------
+// Your Custom Application Models (No changes needed here)
+// -------------------------------------------------------------
+
+model Job {
+  id           String        @id @default(cuid())
+  title        String
+  company      String
+  location     String
+  type         String
+  description  String        @db.Text
+  salary       String?
+
+  postedAt     DateTime      @default(now())
+  postedById   String
+  postedBy     User          @relation("postedJobs", fields: [postedById], references: [id])
+  application  Application[]
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  jobId     String
+  userId    String
+  status    String   @default("PENDING")
+  appliedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  job  Job  @relation(fields: [jobId], references: [id])
+
+  @@unique([userId, jobId])
+}
+
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bio         String?  @db.Text
+  phone       String?
+  location    String?
+  website     String?
+  resumeUrl   String?  // for uploaded PDF resume
+  linkedinUrl String?
+  githubUrl   String?
+  portfolio   String?
+  skills      String?  // can store comma-separated list or JSON
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
