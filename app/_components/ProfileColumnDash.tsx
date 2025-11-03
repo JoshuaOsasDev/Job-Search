@@ -55,7 +55,7 @@ export default function ProfileColumnDash({
 
       <main className="mx-auto max-w-4xl space-y-10">
         {/* TOP SECTION: Profile Completion Card (from image) */}
-        <ProfileCompletionCard profile={profile} name={name} userId={userId} />
+        <ProfileCompletionCard profile={profile} />
 
         {/* BOTTOM SECTION: Profile Update Form */}
         <ProfileForm userId={userId} name={name} profile={profile} />
