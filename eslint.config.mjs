@@ -10,20 +10,32 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // ✅ Global ignores — replaces .eslintignore
+  {
+    ignores: [
+      "**/app/generated/**",
+      "**/prisma/**",
+      ".next/**",
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+    ],
+  },
+
+  // ✅ Base Next.js + TypeScript rules
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
+  // ✅ Custom project rules
   {
-    ignores: ["**/app/generated/**", "**/prisma/**"],
-    // rules: {
-
-    "@typescript-eslint/no-explicit-any": "off",
-    //   "@typescript-eslint/no-unused-vars": [
-    //     "warn",
-    //     { argsIgnorePattern: "^_" },
-    //   ],
-    //   "@typescript-eslint/no-require-imports": "off",
-    //   "@typescript-eslint/no-unused-expressions": "off",
-    // },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+    },
   },
 ];
 

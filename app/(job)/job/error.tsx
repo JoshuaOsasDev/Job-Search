@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import { AlertTriangle } from "lucide-react";
 
-export default function CabinError({
+export default function PostError({
   error,
   reset,
 }: {
