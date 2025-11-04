@@ -3,6 +3,8 @@ import JobDetails from "@/app/_components/JobDetails";
 import { prisma } from "@/app/_libs/prisma";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
