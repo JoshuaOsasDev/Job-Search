@@ -23,6 +23,15 @@ export async function generateMetadata({
     description: job?.description,
   };
 }
+
+export async function generateStaticParams() {
+  const jobs = await prisma.job.findMany({
+    select: { id: true },
+  });
+  return jobs.map((job) => ({
+    id: job.id,
+  }));
+}
 export default async function JobIdPage({
   params,
 }: {
