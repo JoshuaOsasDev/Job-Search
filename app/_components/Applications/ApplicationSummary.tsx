@@ -20,7 +20,7 @@ export default async function ApplicationSummary() {
         where: { userId, status: "REJECTED" },
       }),
       prisma.application.count({
-        where: { userId, status: "SUCCESS" },
+        where: { userId, status: "OFFERED" },
       }),
     ]);
 

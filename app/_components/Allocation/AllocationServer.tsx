@@ -47,7 +47,6 @@ export default async function AllocationServer() {
   const session = await auth();
   const user = session?.user;
 
-  // IMPORTANT: Handle unauthenticated user
   if (!user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -130,24 +129,7 @@ export default async function AllocationServer() {
                       {application.job.location}
                     </p>
                   </div>
-                  {/* Status Badge */}
-                  {/* <StatusBadge status={application.status} /> */}
-                  {/* <form action={UpdateStatus}>
-                    <select name="status">
-                      {statusArray.map((status) => (
-                        <option key={status.value} value={status.value}>
-                          {status.label}
-                        </option>
-                      ))}
-                    </select>
 
-                    <button
-                      type="submit"
-                      className="ml-2 rounded-md bg-gray-600 px-3 py-1 text-white hover:bg-gray-700"
-                    >
-                      Update{" "}
-                    </button>
-                  </form> */}
                   <StatusSelect
                     currentStatus={application.status}
                     applicationId={application.id}

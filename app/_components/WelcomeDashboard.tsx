@@ -15,7 +15,7 @@ export default async function WelcomeDashboard() {
   });
 
   const hired = await prisma.application.count({
-    where: { userId, status: "HIRED" },
+    where: { userId, status: "OFFERED" },
   });
 
   const rejected = await prisma.application.count({
